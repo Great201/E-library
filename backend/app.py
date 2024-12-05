@@ -3,7 +3,9 @@ from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
-from models.user import db, User
+from models import db  # Import the db instance
+from models.user import User
+from models.book import Book
 
 app = Flask(__name__)
 CORS(app)
@@ -60,6 +62,19 @@ def login():
 def protected():
     current_user = get_jwt_identity()
     return jsonify({'logged_in_as': current_user}), 200
+
+@app.route('/books', methods=['GET'])
+def get_books():
+    books = Book.query.all()
+    return jsonify([{'id': book.id, 'title': book.title, 'author': book.author, 'genre': book.genre} for book in books]), 200
+
+@app.route('/books', methods=['POST'])
+def add_book():
+    data = request.get_json()
+    new_book = Book(title=data['title'], author=data['author'], genre=data['genre'])
+    db.session.add(new_book)
+    db.session.commit()
+    return jsonify({'message': 'Book added successfully'}), 201
 
 if __name__ == '__main__':
     app.run(debug=True)
