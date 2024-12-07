@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Navbar from '../components/Navbar';
 
 export default function Books() {
     const [books, setBooks] = useState([]);
@@ -49,6 +50,8 @@ export default function Books() {
     };
 
     return (
+        <>
+        <Navbar/>
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-gray-800">
             <h1 className="mb-4 text-4xl font-bold">Books</h1>
             <Link href="/add-book">
@@ -72,5 +75,6 @@ export default function Books() {
                 {loading ? 'Loading...' : 'Show More'}
             </button>
         </div>
+        </>
     );
 }

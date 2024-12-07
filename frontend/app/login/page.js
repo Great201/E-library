@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import Navbar from '../components/Navbar';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -20,6 +21,8 @@ export default function Login() {
     };
 
     return (
+        <>
+        <Navbar />
         <div className="flex flex-col items-center justify-center min-h-screen text-gray-800 bg-gray-100">
             <h1 className="mb-4 text-4xl font-bold">Login</h1>
             <form onSubmit={handleLogin} className="flex flex-col space-y-4">
@@ -42,5 +45,6 @@ export default function Login() {
                 <button type="submit" className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">Login</button>
             </form>
         </div>
+        </>
     );
 }

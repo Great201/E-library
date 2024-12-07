@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import Navbar from '../components/Navbar';
 
 export default function AddBook() {
     const [title, setTitle] = useState('');
@@ -26,6 +27,8 @@ export default function AddBook() {
     };
 
     return (
+        <>
+        <Navbar/>
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-gray-800">
             <h1 className="mb-4 text-4xl font-bold">Add New Book</h1>
             <form onSubmit={handleAddBook} className="flex flex-col space-y-4 mb-4">
@@ -56,5 +59,6 @@ export default function AddBook() {
                 <button type="submit" className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">Add Book</button>
             </form>
         </div>
+        </>
     );
 } 
