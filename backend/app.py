@@ -6,15 +6,19 @@ from datetime import timedelta
 from models import db  # Import the db instance
 from models.user import User
 from models.book import Book
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env file
 
 app = Flask(__name__)
 CORS(app)
 bcrypt = Bcrypt(app)
 
 # Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///library.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['JWT_SECRET_KEY'] = 'your-secret-key'  # Change this to a secure secret key
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')  # Change this to a secure secret key
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
 
 # Initialize extensions
@@ -28,34 +32,20 @@ with app.app_context():
 @app.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
-    
-    # Check if user already exists
-    if User.query.filter_by(email=data['email']).first():
-        return jsonify({'error': 'Email already registered'}), 409
-    
-    # Hash password
     hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
-    
-    # Create new user
-    new_user = User(email=data['email'], password=hashed_password)
+    new_user = User(name=data['name'], username=data['username'], email=data['email'], password=hashed_password)
     db.session.add(new_user)
     db.session.commit()
-    
     return jsonify({'message': 'User created successfully'}), 201
 
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
     user = User.query.filter_by(email=data['email']).first()
-    
     if user and bcrypt.check_password_hash(user.password, data['password']):
-        access_token = create_access_token(identity=user.email)
-        return jsonify({
-            'access_token': access_token,
-            'email': user.email
-        })
-    
-    return jsonify({'error': 'Invalid credentials'}), 401
+        access_token = create_access_token(identity={'name': user.name})
+        return jsonify(access_token=access_token, name=user.name), 200
+    return jsonify({'message': 'Invalid credentials'}), 401
 
 @app.route('/protected', methods=['GET'])
 @jwt_required()
@@ -75,6 +65,19 @@ def add_book():
     db.session.add(new_book)
     db.session.commit()
     return jsonify({'message': 'Book added successfully'}), 201
+
+@app.route('/user', methods=['GET'])
+@jwt_required()
+def get_user():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(email=current_user['email']).first()  # Assuming email is used as the identifier
+    if user:
+        return jsonify({
+            'name': user.name,
+            'username': user.username,
+            'email': user.email
+        }), 200
+    return jsonify({'message': 'User not found'}), 404
 
 if __name__ == '__main__':
     app.run(debug=True)
