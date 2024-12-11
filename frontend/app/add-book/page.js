@@ -8,18 +8,20 @@ export default function AddBook() {
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
     const [genre, setGenre] = useState('');
+    const [category, setCategory] = useState('');
     const router = useRouter();
 
     const handleAddBook = async (e) => {
         e.preventDefault();
         const token = localStorage.getItem('access_token');
         try {
-            await axios.post('http://127.0.0.1:5000/books', { title, author, genre }, {
+            await axios.post('http://127.0.0.1:5000/books', { title, author, genre, category }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setTitle('');
             setAuthor('');
             setGenre('');
+            setCategory('');
             router.push('/books'); // Redirect to books page after adding
         } catch (error) {
             console.error("Error adding book:", error);
@@ -53,6 +55,14 @@ export default function AddBook() {
                     placeholder="Genre"
                     value={genre}
                     onChange={(e) => setGenre(e.target.value)}
+                    required
+                    className="px-4 py-2 border rounded"
+                />
+                <input
+                    type="text"
+                    placeholder="Category"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
                     required
                     className="px-4 py-2 border rounded"
                 />

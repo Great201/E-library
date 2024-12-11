@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <div className="relative px-6 overflow-x-hidden overflow-y-hidden text-white isolate lg:px-8">
+      <div className="relative px-6 text-white isolate lg:px-8">
         <div
           aria-hidden="true"
           className="absolute inset-x-0 overflow-hidden -top-40 -z-10 transform-gpu blur-3xl sm:-top-80"
@@ -35,12 +35,15 @@ export default function Home() {
             </p>
             <div className="flex items-center justify-center mt-10 gap-x-6">
               <a
-                href="#"
+                href="/books"
                 className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Get started
               </a>
-              <a href="/dashboard" className="font-semibold text-gray-900 text-sm/6">
+              <a
+                href="/dashboard"
+                className="font-semibold text-gray-900 text-sm/6"
+              >
                 Learn more <span aria-hidden="true">→</span>
               </a>
             </div>

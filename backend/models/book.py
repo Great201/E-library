@@ -6,6 +6,7 @@ class Book(db.Model):
     title = db.Column(db.String(120), nullable=False)
     author = db.Column(db.String(120), nullable=False)
     genre = db.Column(db.String(50), nullable=False)
+    category = db.Column(db.String(50), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
