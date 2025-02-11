@@ -61,16 +61,23 @@ export default function Dashboard() {
   };
 
   const handleAddToFavorites = async (bookId) => {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem("access_token");
     try {
-        await axios.post('http://127.0.0.1:5000/favorites', { book_id: bookId }, {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        alert('Book added to favorites!');
+      await axios.post(
+        "https://elibrarybackend.vercel.app/favorites",
+        { book_id: bookId },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      alert("Book added to favorites!");
     } catch (error) {
-      console.error("Error adding to favorites:", error.response ? error.response.data : error.message);
-  }
-};
+      console.error(
+        "Error adding to favorites:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -130,13 +137,27 @@ export default function Dashboard() {
           <h2 className="text-xl font-bold">My Books</h2>
           <div className="grid grid-cols-2 gap-4 mt-4 sm:grid-cols-3 lg:grid-cols-4">
             {books.slice(0, page * 10).map((book, index) => (
-              <div key={`${book.id}-${index}`} className="p-4 bg-white rounded shadow">
-                <Link href={book.link} target="_blank" rel="noopener noreferrer">
-                  <img src={book.cover} alt={book.title} className="object-cover w-full h-40 rounded" />
+              <div
+                key={`${book.id}-${index}`}
+                className="p-4 bg-white rounded shadow"
+              >
+                <Link
+                  href={book.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={book.cover}
+                    alt={book.title}
+                    className="object-cover w-full h-40 rounded"
+                  />
                   <h3 className="mt-2 text-sm font-bold">{book.title}</h3>
                   <p className="text-xs">Author: {book.author}</p>
                 </Link>
-                <button onClick={() => handleAddToFavorites(book.id)} className="mt-2 px-2 py-1 text-white bg-blue-500 rounded">
+                <button
+                  onClick={() => handleAddToFavorites(book.id)}
+                  className="mt-2 px-2 py-1 text-white bg-blue-500 rounded"
+                >
                   Add to Favorites
                 </button>
               </div>
