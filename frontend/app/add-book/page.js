@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Navbar from '../components/Navbar';
@@ -9,11 +9,20 @@ export default function AddBook() {
     const [author, setAuthor] = useState('');
     const [genre, setGenre] = useState('');
     const [category, setCategory] = useState('');
+    const [token, setToken] = useState(null);
     const router = useRouter();
+
+    useEffect(() => {
+        const storedToken = localStorage.getItem('access_token');
+        if (storedToken) {
+            setToken(storedToken);
+        } else {
+            router.push('/login'); // Redirect to login if no token
+        }
+    }, [router]);
 
     const handleAddBook = async (e) => {
         e.preventDefault();
-        const token = localStorage.getItem('access_token');
         try {
             await axios.post('http://127.0.0.1:5000/books', { title, author, genre, category }, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -30,7 +39,7 @@ export default function AddBook() {
 
     return (
         <>
-        <Navbar/>
+        <Navbar />
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-gray-800">
             <h1 className="mb-4 text-4xl font-bold">Add New Book</h1>
             <form onSubmit={handleAddBook} className="flex flex-col space-y-4 mb-4">

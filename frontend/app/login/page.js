@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Navbar from '../components/Navbar';
@@ -8,6 +8,13 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const router = useRouter();
+
+    useEffect(() => {
+        const token = localStorage.getItem("access_token");
+        if (token) {
+            router.push('/books'); 
+        }
+    }, [router]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -19,6 +26,7 @@ export default function Login() {
             console.error("Error logging in:", error);
         }
     };
+
 
     return (
         <>
